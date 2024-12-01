@@ -1,0 +1,6 @@
+#include "Solution.hpp"
+
+long int Solution::partTwo() {
+
+    return 0;
+}
