@@ -32,9 +32,13 @@ struct currentAOC {
 void setup(currentAOC currentAOC);
 
 int main(int argc, char* argv[]){
-    auto time = std::chrono::system_clock::now();
+    auto time = std::chrono::zoned_time(std::chrono::current_zone(), std::chrono::system_clock::now()).get_local_time();
+
     auto dur = time.time_since_epoch();
     auto ymd = std::chrono::year_month_day(std::chrono::time_point_cast<std::chrono::days>(time));
+
+    std::cout << time << "\n";
+    std::cout << ymd << "\n";
 
     currentAOC currentAOC{ymd.year(), ymd.day()};
 
@@ -78,17 +82,9 @@ void setup(currentAOC currentAOC){
     const std::filesystem::path yearPath = solutions / std::to_string((int)currentAOC.year);
     const std::filesystem::path dayPath = yearPath / ("day" + std::to_string((unsigned int)currentAOC.day));
 
-    if(!std::filesystem::exists(yearPath) ||
-        !std::filesystem::is_directory(yearPath)) {
-        if(!std::filesystem::create_directory(yearPath)){
-            std::cerr << "Failed to create year dir\n";
-            return exit(-1);
-        }
-    }
-
     if(!std::filesystem::exists(dayPath) ||
         !std::filesystem::is_directory(dayPath)) {
-        if(!std::filesystem::create_directory(dayPath)){
+        if(!std::filesystem::create_directories(dayPath)){
             std::cerr << "Failed to create day dir\n";
             return exit(-1);
         }
